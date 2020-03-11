@@ -1,0 +1,6 @@
+export const ACTION_CHANGE_NAVBAR_MOD = "ACTION_CHANGE_NAVBAR_MOD";
+export const LOGIN_DATA = "LOGIN_DATA";
+export const LOGGED_IN = "LOGGED_IN";
+export const NEW_USER_REGISTERED = "NEW_USER_REGISTERED";
+export const IMG_LOADING = "IMG_LOADING";
+export const AVATAR_IMG = "AVATAR_IMG";

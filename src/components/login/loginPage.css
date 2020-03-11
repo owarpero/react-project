@@ -1,0 +1,23 @@
+* {
+    font-family: 'Raleway', ;
+}
+
+.right-side {
+    background-image: url(./img/bg-4.jpg);
+    width: 30%;
+    height: 100vh;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-align {
+    width: 70%;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox {
+    margin-left: 2px;
+}
