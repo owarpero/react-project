@@ -4,16 +4,22 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import HomePage from "./components/home/home";
 import RegistationPage from "./components/login/registationPage";
 import { connect } from "react-redux";
+import { message } from "antd";
 
 class App extends React.Component {
   render() {
-    console.log(this.props);
+    let isLoggedIn = localStorage.getItem("currentUser") !== null;
+    isLoggedIn = isLoggedIn || this.props.state.LoginReducer.logedIn;
     return (
       <Switch>
-        <Route path="/login" component={LoginPage} />
+        {!isLoggedIn ? (
+          <Route path="/login" component={LoginPage} />
+        ) : (
+          ((<Redirect to="/home" />), console.log("asd"))
+        )}
+
         <Route path="/registration" component={RegistationPage} />
-        {//this.props.state.LoginReducer.logedIn
-        true ? (
+        {isLoggedIn ? (
           <Route path="/home" component={HomePage} />
         ) : (
           <Redirect to="/login" />

@@ -1,8 +1,7 @@
-import { NEW_USER_REGISTERED, IMG_LOADING, AVATAR_IMG } from "../action";
+import { IMG_LOADING, AVATAR_IMG } from "../action";
 import { message } from "antd";
 import "firebase/auth";
 import firebase from "firebase/app";
-import nanoid from "nanoid";
 
 export const registrationLoadingImg = payload => {
   return {
@@ -17,10 +16,8 @@ export const registrationLoadedImg = payload => {
   };
 };
 
-export const registrationLoadData = (values, history) => (
-  dispatch,
-  getState
-) => {
+export const registrationLoadData = (values, history) => dispatch => {
+  console.log(values);
   firebase
     .auth()
     .createUserWithEmailAndPassword(values.email, values.password)
@@ -37,13 +34,45 @@ export const registrationLoadData = (values, history) => (
     );
 };
 export const registrationLoadUser = values => (dispatch, getState) => {
-  console.log(values);
-  firebase
-    .database()
-    .ref("users/" + values.email)
-    .set({
-      username: values.nickname,
-      email: values.email,
-      profile_picture: values.avatar
+  const user = firebase.auth().currentUser;
+  user
+    .updateProfile({
+      displayName: values.nickname,
+      photoURL: values.avatar
+    })
+    .then(function() {
+      message.success("Registration completed successfully");
+    })
+    .catch(function(error) {
+      message.error(error);
     });
+};
+export const showImg = e => dispatch => {
+  const img = e.file;
+
+  const storage = firebase
+    .app()
+    .storage("gs://react-course-project-9c3eb.appspot.com");
+  storage
+    .ref(`img/${img.name}`)
+    .put(img)
+    .on(
+      "state_changed",
+      snapshot => {
+        console.log(snapshot);
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("img")
+          .child(img.name)
+          .getDownloadURL()
+          .then(URL => {
+            dispatch(registrationLoadedImg(URL));
+            dispatch(registrationLoadingImg(false));
+          });
+      }
+    );
 };

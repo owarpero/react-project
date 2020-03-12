@@ -20,6 +20,21 @@
   background: #fff;
 }
 
+.site-layout-background {
+  display: flex;
+  justify-content: space-between;
+}
+
+.avatar:hover {
+  transition: width 1s, height 1s;
+  width: 43px;
+  height: 43px;
+}
+
+.header_profile {
+  padding-right: 15px
+}
+
 .slider {
   min-height: 20vh;
 }

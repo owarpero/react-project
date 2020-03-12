@@ -1,9 +1,9 @@
-import { ACTION_CHANGE_NAVBAR_MOD } from "../action";
+import { SIGN_OUT } from "../action";
 
-export const homeReducer = (state = { navbarMod: false }, action) => {
+export const homeReducer = (state = {}, action) => {
   switch (action.type) {
-    case ACTION_CHANGE_NAVBAR_MOD:
-      return { ...state, navbarMod: action.payload };
+    case SIGN_OUT:
+      return { ...state };
 
     default:
       return state;

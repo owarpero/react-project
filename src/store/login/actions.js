@@ -1,16 +1,11 @@
-import { LOGIN_DATA, LOGGED_IN } from "../action";
+import { LOGGED_IN } from "../action";
 import { message } from "antd";
 import "firebase/auth";
 import firebase from "firebase/app";
 export const loginData = payload => {
   return {
-    type: LOGIN_DATA,
+    type: LOGGED_IN,
     payload
-  };
-};
-export const loggedIn = () => {
-  return {
-    type: LOGGED_IN
   };
 };
 
@@ -20,7 +15,9 @@ export const loginLoadData = (values, history) => (dispatch, getState) => {
     .signInWithEmailAndPassword(values.email, values.password)
     .then(
       () => {
-        dispatch(loggedIn());
+        const user = firebase.auth().currentUser;
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        dispatch(loginData(true));
         history.push("/home");
       },
       reason => {
@@ -28,6 +25,4 @@ export const loginLoadData = (values, history) => (dispatch, getState) => {
         message.error(errorMessage);
       }
     );
-  const u = firebase.User();
-  console.log(u);
 };

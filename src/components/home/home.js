@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Avatar, Typography } from "antd";
 import { connect } from "react-redux";
 import "antd/dist/antd.css";
 import "./home.css";
@@ -11,16 +11,42 @@ import {
   VideoCameraOutlined,
   UploadOutlined
 } from "@ant-design/icons";
-import { changeNavbarMod } from "../../store/home/actions";
 
+import ProfileInfo from "./modal";
+import { currentUserSignOut } from "../../store/home/actions";
+import Graphs from "./content/graphs";
+
+const { Text } = Typography;
 const { Header, Sider, Content } = Layout;
 class HomePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      visible: false,
+      navbarMod: false
+    };
+  }
   toggle = () => {
-    const { navbarMod, dispatch } = this.props;
-    dispatch(changeNavbarMod(!navbarMod));
+    const { navbarMod } = this.state;
+    this.setState({ navbarMod: !navbarMod });
   };
+  handleSignOut = () => {
+    const { dispatch } = this.props;
+    this.setState({ loading: true });
+    dispatch(currentUserSignOut(this.props.history));
+  };
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+
   render() {
-    const { navbarMod } = this.props;
+    const { navbarMod } = this.state;
+
+    const avatar = JSON.parse(localStorage.getItem("currentUser")).photoURL;
+    const nickname = JSON.parse(localStorage.getItem("currentUser"))
+      .displayName;
+
     return (
       <Layout>
         <Sider trigger={null} collapsible collapsed={navbarMod}>
@@ -49,6 +75,25 @@ class HomePage extends React.Component {
                 onClick: this.toggle
               }
             )}
+            <div className="header_profile">
+              <span>
+                <Text strong>
+                  <Text type="secondary">Hi, </Text> {nickname}{" "}
+                </Text>
+              </span>
+              <Avatar
+                className="avatar"
+                onClick={() => this.setState({ visible: true })}
+                // shape="square"
+                size="large"
+                src={avatar}
+              />
+              <ProfileInfo
+                state={this.state}
+                handleSignOut={this.handleSignOut}
+                handleCancel={this.handleCancel}
+              />
+            </div>
           </Header>
           <Content
             className="site-layout-background"
@@ -58,7 +103,7 @@ class HomePage extends React.Component {
               minHeight: 280
             }}
           >
-            Content
+            <Graphs />
           </Content>
         </Layout>
       </Layout>

@@ -1,18 +1,25 @@
-import React from "react";
-import { Form, Input, Checkbox, Button, message, Upload } from "antd";
-import { Link } from "react-router-dom";
-
-import { Typography } from "antd";
-import "./loginPage.css";
-
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  message,
+  Upload,
+  Typography
+} from "antd";
 import "firebase/auth";
+import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   registrationLoadData,
   registrationLoadingImg,
-  registrationLoadedImg
+  showImg
 } from "../../store/registration/action";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import "./loginPage.css";
+import "firebase/storage";
+
 const layout = {
   labelCol: {
     span: 8
@@ -21,11 +28,6 @@ const layout = {
     span: 16
   }
 };
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
 
 function beforeUpload(file) {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -46,32 +48,32 @@ class RegistationPage extends React.Component {
 
     dispatch(
       registrationLoadData(
-        { ...values, avatar: this.props.avatarImg },
+        {
+          ...values,
+          avatar: this.props.avatarImg
+        },
         this.props.history
       )
     );
   };
 
   handleChange = info => {
+    console.log("info", info);
+
     const { dispatch } = this.props;
     if (info.file.status === "uploading") {
       dispatch(registrationLoadingImg(true));
       return;
-    }
-
-    if (info.file.status === "done") {
-      // callback с примера анта
-      getBase64(info.file.originFileObj, imageUrl => {
-        dispatch(registrationLoadingImg(false));
-        dispatch(registrationLoadedImg(imageUrl));
-      });
     }
   };
 
   onFinishFailed = errorInfo => {
     console.log("Failed:", errorInfo);
   };
-
+  custom = e => {
+    const { dispatch } = this.props;
+    dispatch(showImg(e));
+  };
   render() {
     const uploadButton = (
       <div>
@@ -79,7 +81,7 @@ class RegistationPage extends React.Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-
+    console.log(this.props.avatarImg);
     return (
       <div className="flex">
         <div className="flex right-side flex-align">
@@ -186,8 +188,7 @@ class RegistationPage extends React.Component {
                 listType="picture-card"
                 className="avatar-uploader"
                 showUploadList={false}
-                //  картинка обрбатывается с примера анта
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                customRequest={this.custom}
                 beforeUpload={beforeUpload}
                 onChange={this.handleChange}
               >
