@@ -12,9 +12,34 @@
 
 .logo {
   height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
+  background-repeat: no-repeat;
+  background-image: url(./logo.png);
+  padding: 20;
+  margin-left: 20px;
+  max-width: 180px;
+  width: 100%;
+  height: 100px;
 }
+
+.logo2 {
+  height: 32px;
+  background-repeat: no-repeat;
+  background-image: url(./logo2.png);
+  padding: 20;
+  margin-left: 20px;
+  margin-top: 15px;
+  max-width: 180px;
+  width: 100%;
+  height: 100px;
+}
+
+.cards {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+
 
 .site-layout .site-layout-background {
   background: #fff;
@@ -22,19 +47,40 @@
 
 .site-layout-background {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  /* align-items: center; */
 }
 
-.avatar:hover {
-  transition: width 1s, height 1s;
-  width: 43px;
-  height: 43px;
+.record_person_card {
+  width: 50%;
 }
+
+@media screen and (max-width: 1560px) {
+  .record_person_card {
+    width: 100%;
+  }
+}
+
+
 
 .header_profile {
-  padding-right: 15px
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 15px;
 }
 
 .slider {
   min-height: 20vh;
+}
+
+.text {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.ant-layout-heade {
+  line-height: 0;
 }
