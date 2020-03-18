@@ -20,21 +20,10 @@ class LineGraphTracking extends React.Component {
       .database()
       .ref(`tracking/${trackingDate.yearAndMonth}`)
       .on("value", snapshot => {
-        let daysInMonth;
-        if (trackingDate.month === "2") {
-          daysInMonth = 29;
-        } else if (
-          parseInt(trackingDate.month) % 2 === 0 &&
-          trackingDate.month !== 2
-        ) {
-          daysInMonth = 30;
-        } else {
-          daysInMonth = 31;
-        }
         if (snapshot.val() !== null) {
           const arrOfkeys = Object.values(Object.keys(snapshot.val()));
           const date = [];
-          for (let index = 0; index <= daysInMonth; index++) {
+          for (let index = 0; index <= trackingDate.daysInMonth; index++) {
             const el = arrOfkeys.find(element => element === index.toString());
             if (el !== undefined) {
               const sumOfPricesPerDay = () => {
@@ -56,7 +45,6 @@ class LineGraphTracking extends React.Component {
           this.setState({ date: [] });
         }
       });
-    //console.log(Object.values(snapshot.val()));
   };
   componentDidUpdate(props) {
     if (this.props.trackingDate.fullDate !== props.trackingDate.fullDate) {
@@ -65,20 +53,9 @@ class LineGraphTracking extends React.Component {
   }
   render() {
     const { trackingDate } = this.props;
-    let daysInMonth;
-    if (trackingDate.month === "2") {
-      daysInMonth = 29;
-    } else if (
-      parseInt(trackingDate.month) % 2 === 0 &&
-      trackingDate.month !== 2
-    ) {
-      daysInMonth = 30;
-    } else {
-      daysInMonth = 31;
-    }
 
     const labels = [];
-    for (let index = 0; index <= daysInMonth; index++) {
+    for (let index = 0; index <= trackingDate.daysInMonth; index++) {
       labels.push(index);
     }
     return (

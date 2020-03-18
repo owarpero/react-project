@@ -23,11 +23,23 @@ const dateValidator = date => {
   const yearAndMonth = `${newDate.getFullYear()}-${newDate.getMonth() + 1}`;
   const day = `${newDate.getDate()}`;
   const month = `${newDate.getMonth() + 1}`;
+  const year = `${newDate.getFullYear()}`;
+  let daysInMonth;
+  if (month === "2") {
+    daysInMonth = 29;
+    console.log("feb");
+  } else if (parseInt(month) % 2 === 0 && month !== 2) {
+    daysInMonth = 30;
+  } else {
+    daysInMonth = 31;
+  }
   return {
     day,
     yearAndMonth,
     fullDate,
-    month
+    month,
+    year,
+    daysInMonth
   };
 };
 

@@ -9,7 +9,7 @@ class LineGraph extends React.Component {
     super(props);
     this.state = {
       snapshot: {},
-      date: []
+      data: []
     };
     this.changeListen();
   }
@@ -20,31 +20,23 @@ class LineGraph extends React.Component {
       .database()
       .ref(`records/${date.yearAndMonth}`)
       .on("value", snapshot => {
-        let daysInMonth;
-        if (date.month === "2") {
-          daysInMonth = 29;
-          console.log("feb");
-        } else if (parseInt(date.month) % 2 === 0 && date.month !== 2) {
-          daysInMonth = 30;
-        } else {
-          daysInMonth = 31;
+        const arrOfkeys = Object.values(Object.keys(snapshot.val()));
+        const data = [];
+
+        for (let index = 0; index <= date.daysInMonth; index++) {
+          const el = arrOfkeys.find(element => element === index.toString());
+
+          if (el !== undefined) {
+            data.push(Object.keys(snapshot.val()[el]).length);
+          } else {
+            data.push(0);
+          }
         }
 
-        if (snapshot.val() !== null) {
-          const arrOfkeys = Object.values(Object.keys(snapshot.val()));
-          const date = [];
-          for (let index = 0; index <= daysInMonth; index++) {
-            const el = arrOfkeys.find(element => element === index.toString());
-            if (el !== undefined) {
-              date.push(Object.keys(snapshot.val()[el]).length);
-            } else {
-              date.push(0);
-            }
-          }
-          this.setState({ date });
-        } else {
-          this.setState({ date: [] });
-        }
+        this.setState({ data });
+        //  else {
+        //   this.setState({ date: [] });
+        // }
       });
   };
   componentDidUpdate(props) {
@@ -54,17 +46,8 @@ class LineGraph extends React.Component {
   }
   render() {
     const { date } = this.props;
-    let daysInMonth;
-    if (date.month === "2") {
-      daysInMonth = 29;
-    } else if (parseInt(date.month) % 2 === 0 && date.month !== 2) {
-      daysInMonth = 30;
-    } else {
-      daysInMonth = 31;
-    }
-
     const labels = [];
-    for (let index = 0; index <= daysInMonth; index++) {
+    for (let index = 0; index <= date.daysInMonth; index++) {
       labels.push(index);
     }
     return (
@@ -74,7 +57,7 @@ class LineGraph extends React.Component {
             labels: labels,
             datasets: [
               {
-                data: this.state.date,
+                data: this.state.data,
                 label: "People records for a month",
                 backgroundColor: "rgba(255, 99, 132, 0.2)",
                 borderColor: "rgba(54, 162, 235, 1)",
